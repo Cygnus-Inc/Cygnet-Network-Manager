@@ -1,0 +1,16 @@
+allow-ovs br1
+iface br1 inet dhcp
+    ovs_type OVSBridge
+    ovs_ports eth0
+    mtu 1466    
+
+allow-ovs br2
+iface br2 inet manual
+    ovs_type OVSBridge
+    ovs_extra stp_enable=true
+    mtu 1462
+
+allow-br1 eth0
+iface eth0 inet manual
+    ovs_bridge br1
+    ovs_type OVSPort

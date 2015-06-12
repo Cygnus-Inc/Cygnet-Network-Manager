@@ -1,0 +1,14 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:		        openvswitch-cygnus
+# Required-Start:	    openvswitch-switch
+# Required-Stop:	
+# Default-Start:	    2 3 4 5
+# Default-Stop:		    0 1 6
+# Short-Description:	brings cygnus OVS network up
+### END INIT INFO
+
+BRIDGES=`ifquery --allow ovs -l`
+ifup --allow=ovs $BRIDGES
+echo $BRIDGES > /home/saad/boo

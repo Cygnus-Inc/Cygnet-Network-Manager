@@ -1,0 +1,44 @@
+## TODO:
+
+
+- User optimized network config
+    Instead of managing a the network setup by our own. We should receive a configuration from
+    The user and configure the network according to it.
+
+- Docker API
+    Extend docker API support to detect start, stop, attach calls and modify a container state
+    according to it.
+
+- Etcd Locking
+    implement a locking mechanism to lock a key/dir over the etcd cluster.
+
+
+- Labeling services
+    label a container over the etcd network with regard to the service corresponding
+    to it with the ability to bring a container with a matching state up again to host
+    the same service
+
+- Provide signal management
+    On SIGINT,SIGTERM,SIGKILL,SIGABRT.. handle them to exit gracefully and clean up
+    tunnels and container network
+
+## On progress
+- Handle new options in NetworkInterface
+
+## DONE
+
+- Make sure etcd is working fine and handle bugs if any rise
+
+- Handle hooking containers via NetworkInterface and customize Adapter to conform to those
+  Changes
+
+- Modify clusertstate for OVS to receive NetworkInterface instance as a pre-initialized class
+	variable in order to make direct cluster layout modifications to it.
+
+- Bucketing addresses:
+    Use buckets to configure container's network in order to point out which container is up
+    and which address is free and free addresses once container is not running anymore.
+
+- multi network containers
+    test containers with two networks or more, and containers exposed to 
+    a single port on a host local interface and its own interface.
