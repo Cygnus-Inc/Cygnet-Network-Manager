@@ -38,7 +38,5 @@ templates_path = ['.']
 html_use_smartypants = True
 html_last_updated_fmt = '%b %d, %Y'
 html_split_index = True
-html_sidebars = {
-   '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
-}
+html_sidebars = {'**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'], }
 html_short_title = '%s-%s' % (project, version)

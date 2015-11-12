@@ -1,10 +1,8 @@
-from autobahn import wamp
-from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
+from autobahn.twisted.wamp import ApplicationSession
 from twisted.internet.defer import inlineCallbacks
-from os import environ
-from twisted.internet import reactor
 from cygnet_network_manager.clusterState import ClusterState
 import uuid
+
 
 class Client(ApplicationSession):
     '''
@@ -19,13 +17,13 @@ class Client(ApplicationSession):
     adapters
     '''
     def __init__(self, config):
-        ApplicationSession.__init__(self,config)
+        ApplicationSession.__init__(self, config)
         self.cluster_state = ClusterState(self)
         try:
-            self.node_id = (open('/cygnus/node','r')).read()
+            self.node_id = (open('/cygnus/node', 'r')).read()
         except IOError:
             self.node_id = str(uuid.uuid1())
-            f = open('/cygnus/node','w')
+            f = open('/cygnus/node', 'w')
             f.write(self.node_id)
             f.close()
 
@@ -36,10 +34,8 @@ class Client(ApplicationSession):
         self.cluster_state.init()
         yield self.subscribe(self.cluster_state)
 
-    def leave(self, reason = None, log_message=None):
+    def leave(self, reason=None, log_message=None):
         ApplicationSession.leave(self, reason, log_message)
 
     def disconnect(self):
         ApplicationSession.disconnect(self)
-
-

@@ -6,8 +6,6 @@ AWS EC2 instances can make use of "Elasic Network Interfaces", which
 can be bound to a docker container in order to provide it with a
 dedicated network address.
 """
-import os
-import re
 from boto.utils import get_instance_metadata
 from boto.utils import get_instance_identity
 

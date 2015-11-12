@@ -1,5 +1,4 @@
 from copy import deepcopy
-
 from autobahn import wamp
 from cygnet_common.design import Task
 from cygnet_network_manager.etcdCluster import EtcdClusterClient
@@ -44,24 +43,23 @@ class ClusterState(object):
     address1 = None
     interface = None
     etcd_addr = None
+
     def __init__(self, session):
 	'''
-	At initialization interface is supposed to be
-	previously initialized and set as a class variable
-	so we won't have to set containers or endpoints since
-	they're held by the cygnetcommon interface.
-	'''
+        At initialization interface is supposed to be
+        previously initialized and set as a class variable
+        so we won't have to set containers or endpoints since
+        they're held by the cygnetcommon interface.
+        '''
         self.session = session
-        #self.child_containers = []
-        #self.gre_endpoints = []
         self.gre_endpoint = self.address1
         self.gre_health = dict()
 
     def init(self):
-	'''
-	On initialization a mere sync request is sent and
-	components are set to action.
-	'''
+        '''
+        On initialization a mere sync request is sent and
+        components are set to action.
+        '''
         self.session.publish("ovs.sync_request", self.gre_endpoint[0])
         self.health_check = Task.TaskInterval(10, self.keepalive)
         self.health_check.start()
@@ -76,66 +74,63 @@ class ClusterState(object):
             return
         gre_health_tmp = deepcopy(self.gre_health)
         for gre_endpoint, health in gre_health_tmp.iteritems():
-            mask = [ endpoint == gre_endpoint for endpoint in self.interface.endpoints]
+            mask = [endpoint == gre_endpoint for endpoint in self.interface.endpoints]
             if (most - health) > 5 and sum(mask):
                 # unhealthy endpoint -- remove
                 idx = mask.index(True)
                 self.interface.endpoints.pop(idx)
                 self.gre_health.pop(gre_endpoint)
-                ## Broadcast modifications
+                # Broadcast modifications
                 self.session.publish("ovs.sync_nodes", self.interface.endpoints)
 
-
-
-    ## What should we sync?
-    ## 1- GRE endpoints
+    # What should we sync?
+    # 1- GRE endpoints
     @wamp.subscribe(u'ovs.sync_nodes')
     def syncNodes(self, gre_endpoints):
         print "Syncing: ", gre_endpoints
-        ## Are we starting up?
-        ## a properly sat up cluster with more than two nodes will be refering
-        ## to the same number of endpoints
-        ## a one-node cluster should receive a full list of same up
-        ## endpoints from another
+        # Are we starting up?
+        # a properly sat up cluster with more than two nodes will be refering
+        # to the same number of endpoints
+        # a one-node cluster should receive a full list of same up
+        # endpoints from another
         if len(self.interface.endpoints) == 0 and len(gre_endpoints) != 0:
             self.interface.initContainerNetwork()
             for endpoint in gre_endpoints:
                 self.interface.endpoints.append(endpoint)
-        ## Are we broadcasting new endpoint(s)
+        # Are we broadcasting new endpoint(s)
         elif len(self.interface.endpoints) < len(gre_endpoints):
             for gre_endpoint in gre_endpoints:
                 if gre_endpoint not in self.interface.endpoints:
                     self.interface.endpoints.append(gre_endpoint)
 
-        ## Are we broadcasting endpoint leave?
+        # Are we broadcasting endpoint leave?
         elif len(gre_endpoints) < len(self.interface.endpoints) and len(gre_endpoints) != 0:
             for gre_endpoint in self.interface.endpoints:
                 if gre_endpoint not in gre_endpoints:
                     self.interface.endpoints.remove(gre_endpoint)
 
-        ## If we reach this point without updating GRE we're the second node up
-        ## We should act as the first GRE endpoint and re-broadcast
-        ## We don't have to update gre since Network Interface will do that for us
-        ## self.update_gre()
+        # If we reach this point without updating GRE we're the second node up
+        # We should act as the first GRE endpoint and re-broadcast
+        # We don't have to update gre since Network Interface will do that for us
+        # self.update_gre()
         print "Synced:", self.interface
         print "ME:", self.gre_endpoint
-
 
     @wamp.subscribe(u'ovs.sync_request')
     def syncRequest(self, origin):
         print "Request.."
-        ## we don't really care who issued
+        # we don't really care who issued
         if origin:
-            if not self.gre_health.has_key(origin):
+            if origin not in self.gre_health:
                 self.gre_health[origin] = 0
             if len(self.interface.endpoints) == 0:
                 self.interface.initContainerNetwork()
-            if not origin in self.interface.endpoints:
+            if origin not in self.interface.endpoints:
                 self.interface.endpoints.append(origin)
-                to_sync = self.interface.endpoints[:self.interface.endpoints.index(origin)] + \
-                           self.interface.endpoints[self.interface.endpoints.index(origin)+1:] + \
-                           [self.gre_endpoint[0]]
-                self.session.publish("ovs.sync_nodes",to_sync)
+                to_sync = (self.interface.endpoints[:self.interface.endpoints.index(origin)] +
+                           self.interface.endpoints[self.interface.endpoints.index(origin)+1:] +
+                           [self.gre_endpoint[0]])
+                self.session.publish("ovs.sync_nodes", to_sync)
             self.gre_health[origin] += 1
             self.gre_health[origin] = max([v for v in self.gre_health.itervalues()])
 
@@ -147,10 +142,10 @@ class ClusterState(object):
         if container["Address"]:
             self.interface.containers.append(container)
             return
-	return
+        return
 
     @wamp.subscribe(u'ovs.unhook_container')
-    def unhookContainer(self,container):
+    def unhookContainer(self, container):
         if str(container["Node"]) != self.session.node_id:
             return
         if container["Address"]:

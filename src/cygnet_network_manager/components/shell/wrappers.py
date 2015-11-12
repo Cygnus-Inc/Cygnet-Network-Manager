@@ -3,9 +3,6 @@ This module contains python functions that wrap shell commands.
 """
 from __future__ import print_function
 
-from sarge import run
-from sarge import Capture
-
 
 def pipework(*args, **kwargs):
     """
@@ -106,9 +103,6 @@ def pipework(*args, **kwargs):
     #     pass
     # if 'mac_address' in kwargs:
     #     pass
-
-
-
     cmd = ''.join(cmd_parts)
     print(cmd)
 
