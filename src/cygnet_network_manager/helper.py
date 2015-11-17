@@ -2,7 +2,7 @@ from cygnet_network_manager.client import Client
 from cygnet_network_manager.clusterState import ClusterState
 from autobahn.twisted.wamp import ApplicationRunner
 from cygnet_common.NetworkInterface import NetworkInterface
-
+from cygnet_common import strtypes
 
 class Helper(object):
 
@@ -12,7 +12,7 @@ class Helper(object):
         self.args = dict()
         for arg, value in kwargs.iteritems():
             self.args[arg] = value
-        print self.args
+        print(self.args)
         empty_setup = {'interfaces': [],
                        'containers': [],
                        'endpoints': [],
@@ -28,6 +28,6 @@ class Helper(object):
 
     # simply run the client
     def connect(self):
-        print self.args['router-addr']
-        runner = ApplicationRunner(u"ws://" + self.args['router-addr'] + "/ws", unicode(self.args['router-realm']))
+        print(self.args['router-addr'])
+        runner = ApplicationRunner(u"ws://" + self.args['router-addr'] + "/ws", strtypes.cast_unicode(self.args['router-realm']))
         runner.run(Client)

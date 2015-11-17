@@ -70,6 +70,7 @@ setup(
         'netifaces',
         'twisted',
         'autobahn',
+        'cygnet-common',
     ],
     extras_require={
         # eg:

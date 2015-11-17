@@ -2,7 +2,7 @@ from copy import deepcopy
 from autobahn import wamp
 from cygnet_common.design import Task
 from cygnet_network_manager.etcdCluster import EtcdClusterClient
-
+from cygnet_common import strtypes
 
 class ClusterState(object):
     '''
@@ -45,7 +45,7 @@ class ClusterState(object):
     etcd_addr = None
 
     def __init__(self, session):
-	'''
+        '''
         At initialization interface is supposed to be
         previously initialized and set as a class variable
         so we won't have to set containers or endpoints since
@@ -70,7 +70,7 @@ class ClusterState(object):
         try:
             most = max([health for health in self.gre_health.itervalues()])
         except ValueError as e:
-            print e
+            print(e)
             return
         gre_health_tmp = deepcopy(self.gre_health)
         for gre_endpoint, health in gre_health_tmp.iteritems():
@@ -87,7 +87,7 @@ class ClusterState(object):
     # 1- GRE endpoints
     @wamp.subscribe(u'ovs.sync_nodes')
     def syncNodes(self, gre_endpoints):
-        print "Syncing: ", gre_endpoints
+        print("Syncing: ", gre_endpoints)
         # Are we starting up?
         # a properly sat up cluster with more than two nodes will be refering
         # to the same number of endpoints
@@ -113,12 +113,12 @@ class ClusterState(object):
         # We should act as the first GRE endpoint and re-broadcast
         # We don't have to update gre since Network Interface will do that for us
         # self.update_gre()
-        print "Synced:", self.interface
-        print "ME:", self.gre_endpoint
+        print("Synced:", self.interface)
+        print("ME:", self.gre_endpoint)
 
     @wamp.subscribe(u'ovs.sync_request')
     def syncRequest(self, origin):
-        print "Request.."
+        print("Request..")
         # we don't really care who issued
         if origin:
             if origin not in self.gre_health:
@@ -138,7 +138,7 @@ class ClusterState(object):
     def hookContainer(self, container):
         if str(container["Node"]) != self.session.node_id:
             return
-        print container
+        print(container)
         if container["Address"]:
             self.interface.containers.append(container)
             return

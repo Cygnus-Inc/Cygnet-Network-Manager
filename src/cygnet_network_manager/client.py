@@ -30,7 +30,7 @@ class Client(ApplicationSession):
     @inlineCallbacks
     def onJoin(self, details):
 
-        print "Helper Attached to Router"
+        print("Helper Attached to Router")
         self.cluster_state.init()
         yield self.subscribe(self.cluster_state)
 
