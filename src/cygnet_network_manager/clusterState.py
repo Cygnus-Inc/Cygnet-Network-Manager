@@ -4,6 +4,7 @@ from cygnet_common.design import Task
 from cygnet_network_manager.etcdCluster import EtcdClusterClient
 from cygnet_common import strtypes
 
+
 class ClusterState(object):
     '''
     an Cluster state is merely an object which

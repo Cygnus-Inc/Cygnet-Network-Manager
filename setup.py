@@ -29,7 +29,8 @@ setup(
     long_description='%s\n%s' % (
         read('README.rst'),
         re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
-    author='Sam Bishop',
+    author='Cygnus',
+    author_email='sam@cygnus.email',
     url='https://github.com/Cygnus-Inc/cygnet-network-adapter',
     packages=find_packages('src'),
     package_dir={'': 'src'},

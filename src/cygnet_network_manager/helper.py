@@ -4,6 +4,7 @@ from autobahn.twisted.wamp import ApplicationRunner
 from cygnet_common.NetworkInterface import NetworkInterface
 from cygnet_common import strtypes
 
+
 class Helper(object):
 
     # get the address of br1 supposed that ovs ifaces are up
