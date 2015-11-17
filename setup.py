@@ -3,13 +3,11 @@
 from __future__ import absolute_import, print_function
 
 import io
-import os
 import re
 from glob import glob
 from os.path import basename
 from os.path import dirname
 from os.path import join
-from os.path import relpath
 from os.path import splitext
 
 from setuptools import find_packages
@@ -31,7 +29,8 @@ setup(
     long_description='%s\n%s' % (
         read('README.rst'),
         re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
-    author='Sam Bishop',
+    author='Cygnus',
+    author_email='sam@cygnus.email',
     url='https://github.com/Cygnus-Inc/cygnet-network-adapter',
     packages=find_packages('src'),
     package_dir={'': 'src'},
@@ -72,6 +71,7 @@ setup(
         'netifaces',
         'twisted',
         'autobahn',
+        'cygnet-common',
     ],
     extras_require={
         # eg:
